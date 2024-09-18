@@ -541,4 +541,16 @@ vows
       }
     }
   })
+  .addBatch({
+    "Prototype pollution when setting a cookie with the domain __proto__": {
+      topic: function () {
+        var cookieJar = new CookieJar(undefined, {rejectPublicSuffixes: false});
+        cookieJar.setCookie('test=value; Domain=__proto__; Path=/proto', 'http://__proto__', this.callback);
+    },
+    "Does not affected by the attempt to pollute the prototype": function () {
+      const pullutedObject = {};
+      assert(pullutedObject["/proto"] === undefined);
+    }
+  }
+})
   .export(module);
